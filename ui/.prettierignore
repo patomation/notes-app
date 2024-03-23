@@ -1,0 +1,20 @@
+CHANGELOG.md
+dist
+lib
+build
+bin/
+nginx/
+*\ copy*
+.commitlintrc.json
+.env.example
+.gitignore
+.husky
+.prettierignore
+.node-version
+Dockerfile*
+nginx.conf
+Jenkinsfile
+docker-compose.yml
+docker-compose*
+*.png
+.lintstagedrc

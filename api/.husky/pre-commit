@@ -1,0 +1,3 @@
+node node_modules/pretty-quick/lib/cli.mjs --staged
+npm test
+npm run test:e2e

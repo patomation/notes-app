@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  nginx:
+    container_name: note-ui-nginx
+    image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    networks:
+      - note_network
+
+  ui:
+    container_name: note-ui
+    image: note-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+    networks:
+      - note_network
+    command: npm start
+
+  api:
+    image: note-api
+    container_name: note-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - note_network
+    command: npm start
+
+networks:
+  note_network:
+    name: note_network
