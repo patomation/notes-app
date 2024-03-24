@@ -57,25 +57,21 @@ export default function Home() {
   const [accessToken] = useAtom(accessTokenAtom)
 
   const [notes, setNotes] = useState<Note[]>([])
-
-  const handleSearchNotes = useCallback(
-    async (query = '') => {
-      const response = await fetch(
-        '/api/note/search?q=' + query,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization:
-              'Bearer ' + accessToken,
-          },
-        }
-      )
-      const json = await response.json()
-      setNotes(json.notes)
-    },
-    [accessToken]
-  )
+  
+  const handleSearchNotes  = useCallback(async (query = "") => {
+    const response = await fetch(
+      '/api/note/search?q=' + query,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken
+        },
+      }
+    )
+    const json = await response.json()
+    setNotes(json.notes)
+  }, [accessToken])
 
   const handleCreateNote = useCallback(
     async (content = '') => {
