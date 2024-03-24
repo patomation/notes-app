@@ -1,8 +1,8 @@
 version: "3.9"
 services:
   nginx:
-    container_name: note-ui-nginx
-    image: nginx:latest
+    container_name: note-nginx
+    image: note-nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile
