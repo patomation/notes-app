@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - note_network
+    ports:
+      - 9005:80
 
   ui:
     container_name: note-ui
