@@ -3,6 +3,10 @@ import React from 'react'
 import {
   BeakerIcon,
   HomeIcon,
+  // SearchIcon,
+  // AddIcon, 
+  MagnifyingGlassIcon,
+  PlusCircleIcon
 } from '@heroicons/react/24/solid'
 import { useAtom } from 'jotai'
 import { accessTokenAtom } from '@/atoms/accessTokenAtom'
@@ -47,6 +51,9 @@ export function Nav() {
         >
           <HomeIcon className="h-6 w-6 text-white-500" />
         </Link>
+
+        <MagnifyingGlassIcon  className="h-6 w-6 text-white-500"/>
+        <PlusCircleIcon  className="h-6 w-6 text-white-500"/>
 
         {links.map(({ title, to }, i) => (
           <Link

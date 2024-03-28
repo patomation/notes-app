@@ -20,26 +20,6 @@ export default function Home() {
   } = useForm()
 
   const [notes, setNotes] = useState<Note[]>([
-    {
-      note_id: '1',
-      content: 'This is a note, this is a note',
-    },
-    {
-      note_id: '2',
-      content: 'This is a note, this is a note',
-    },
-    {
-      note_id: '3',
-      content: 'This is a note, this is a note',
-    },
-    {
-      note_id: '4',
-      content: 'This is a note, this is a note',
-    },
-    {
-      note_id: '5',
-      content: 'This is a note, this is a note',
-    },
   ])
   
   const handleSearchNotes  = useCallback(async (query = "") => {
