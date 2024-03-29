@@ -92,9 +92,13 @@ export default function Home() {
         }
       )
       const json = await response.json()
-      setNotes(json.notes)
+      setNotes((prev) => [
+        { note_id: 'new', content },
+        ...prev,
+      ])
+      send({ type: 'SAVE' })
     },
-    [accessToken]
+    [accessToken, send]
   )
 
   useEffect(() => {

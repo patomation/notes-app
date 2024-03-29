@@ -20,9 +20,6 @@ export function NoteForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      style={{
-        margin: '0 0 2em 0',
-      }}
     >
       <div
         className="mb-6"
@@ -41,6 +38,7 @@ export function NoteForm({
             New Note
           </label>
           <input
+            autoFocus
             type="text"
             id="content"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
