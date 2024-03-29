@@ -26,6 +26,29 @@ export class NoteService {
     );
   }
 
+  public async update(
+    note_id: string,
+    { content }: Partial<Note>,
+    { user_id }: Pick<User, 'user_id' | 'username'>,
+  ): Promise<Note> {
+    const note = await this.repository.findOneByOrFail({
+      user_id,
+      note_id,
+    });
+    note.content = content;
+    return await this.repository.save(note);
+  }
+
+  public async delete(
+    note_id: string,
+    { user_id }: Pick<User, 'user_id' | 'username'>,
+  ): Promise<void> {
+    await this.repository.softDelete({
+      user_id,
+      note_id,
+    });
+  }
+
   public async search(
     query: string = '',
     { user_id }: Pick<User, 'user_id' | 'username'>,
@@ -34,6 +57,7 @@ export class NoteService {
       .createQueryBuilder('note')
       .where('note.user_id = :user_id', { user_id })
       .andWhere('note.content LIKE :query', { query: `%${query}%` })
+      .andWhere('note.deleted_at IS NULL')
       .getMany();
     return {
       notes,

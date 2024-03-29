@@ -17,4 +17,7 @@ export class Note {
 
   @Column({ nullable: true })
   content?: string;
+
+  @DeleteDateColumn()
+  deleted_at?: Date;
 }

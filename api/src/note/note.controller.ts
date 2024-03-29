@@ -1,6 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
+  Param,
+  Patch,
   Post,
   Query,
   Request,
@@ -22,6 +25,25 @@ export class NoteController {
     @Request() req: Request & { user: Pick<User, 'user_id' | 'username'> },
   ) {
     return this.noteService.create(note, req.user);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':note_id')
+  update(
+    @Param('note_id') note_id: string,
+    @Body() note: Partial<Note>,
+    @Request() req: Request & { user: Pick<User, 'user_id' | 'username'> },
+  ) {
+    return this.noteService.update(note_id, note, req.user);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':note_id')
+  delete(
+    @Param('note_id') note_id: string,
+    @Request() req: Request & { user: Pick<User, 'user_id' | 'username'> },
+  ) {
+    return this.noteService.delete(note_id, req.user);
   }
 
   @UseGuards(AuthGuard)
