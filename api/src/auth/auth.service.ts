@@ -68,10 +68,22 @@ export class AuthService {
       .addSelect('auth.salt')
       .getOne();
 
-    if (!auth) throw new UnauthorizedException();
+    if (!auth) {
+      const message = "User not found"
+      console.log(message)
+      throw new UnauthorizedException(message)
+    };
     const hashPassword = await hash(password, auth.salt);
-    if (auth.username !== username) throw new UnauthorizedException();
-    if (auth.password !== hashPassword) throw new UnauthorizedException();
+    if (auth.username !== username) {
+      const message = "username miss match"
+      console.log(message)
+      throw new UnauthorizedException(message)
+    };
+    if (auth.password !== hashPassword) {
+      const message = "password miss match"
+      console.log(message)
+      throw new UnauthorizedException(message)
+    };
 
     return {
       username: auth.username,

@@ -8,6 +8,8 @@ import { useMachine } from '@xstate/react'
 import {
   MagnifyingGlassIcon,
   PlusCircleIcon,
+  PencilIcon,
+  TrashIcon,
 } from '@heroicons/react/24/solid'
 import { createMachine } from 'xstate'
 
@@ -51,27 +53,29 @@ const mainMachine = createMachine({
 })
 
 export default function Home() {
-  const [current, send] = useMachine(
-    mainMachine
-  )
+  const [current, send] = useMachine(mainMachine)
   const [accessToken] = useAtom(accessTokenAtom)
 
   const [notes, setNotes] = useState<Note[]>([])
-  
-  const handleSearchNotes  = useCallback(async (query = "") => {
-    const response = await fetch(
-      '/api/note/search?q=' + query,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + accessToken
-        },
-      }
-    )
-    const json = await response.json()
-    setNotes(json.notes)
-  }, [accessToken])
+
+  const handleSearchNotes = useCallback(
+    async (query = '') => {
+      const response = await fetch(
+        '/api/note/search?q=' + query,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization:
+              'Bearer ' + accessToken,
+          },
+        }
+      )
+      const json = await response.json()
+      setNotes(json.notes)
+    },
+    [accessToken]
+  )
 
   const handleCreateNote = useCallback(
     async (content = '') => {
@@ -158,22 +162,88 @@ export default function Home() {
           />
         )}
         <ul>
-          {notes?.map(({ note_id, content }) => (
-            <li
-              key={note_id}
-              style={{
-                padding: '1em 1em',
-                margin: '1em 0',
-                borderRadius: '1em',
-                border: '1px solid gray',
-                background:
-                  'rgba(255,255,255,0.5)',
-                wordWrap: 'break-word',
-              }}
-            >
-              <span>{content}</span>
-            </li>
-          ))}
+          {notes
+            ?.reverse()
+            .map(({ note_id, content }) => (
+              <li
+                key={note_id}
+                style={{
+                  padding: '1em 1em',
+                  margin: '1em 0',
+                  borderRadius: '1em',
+                  border: '1px solid gray',
+                  background:
+                    'rgba(255,255,255,0.5)',
+                  wordWrap: 'break-word',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    // paddingBottom: '1em',
+                    border: '1px solid purple',
+                  }}
+                >
+                  <div
+                    style={{
+                      border: '1px solid red',
+                      marginRight: '1em',
+                      maxWidth: '85%',
+                    }}
+                  >
+                    {/* title */}
+                    <span
+                      style={{
+                        wordWrap: 'break-word',
+                      }}
+                    >
+                      {content}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      flexGrow: 1,
+                      border: '1px solid green',
+                    }}
+                  ></div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent:
+                        'space-between',
+                      border: '1px solid gold',
+                      height: '100%',
+                    }}
+                  >
+                    <PencilIcon
+                      className="h-6 w-6 text-white-500"
+                      style={{
+                        cursor: 'pointer',
+                        marginRight: '0.5em',
+                      }}
+                      onClick={() =>
+                        send({ type: 'EDIT' })
+                      }
+                    />
+                    <TrashIcon
+                      className="h-6 w-6 text-white-500"
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* <span
+                  style={{
+                    wordWrap: 'break-word',
+                  }}
+                >
+                  {content}
+                </span> */}
+              </li>
+            ))}
         </ul>
       </>
     )
