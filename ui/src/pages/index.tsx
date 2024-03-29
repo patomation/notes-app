@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/solid'
 import { createMachine } from 'xstate'
 
-const createMainMachine = createMachine({
+const mainMachine = createMachine({
   initial: 'VIEW',
   states: {
     VIEW: {
@@ -52,7 +52,7 @@ const createMainMachine = createMachine({
 
 export default function Home() {
   const [current, send] = useMachine(
-    createMainMachine
+    mainMachine
   )
   const [accessToken] = useAtom(accessTokenAtom)
 

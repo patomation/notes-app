@@ -67,7 +67,7 @@ export function NoteForm({
           {errors.content && (
             <span
               style={{
-                color: 'red',
+                color: '#f1095a',
               }}
             >
               {errors.content.message}

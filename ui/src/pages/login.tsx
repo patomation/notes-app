@@ -23,6 +23,9 @@ export default function Login() {
 
   const [loading, setLoading] = useState(false)
 
+  const [errorMessage, setErrorMessage] =
+    useState<string | undefined>()
+
   const handleLogin = useCallback(
     async (values: any) => {
       setLoading(true)
@@ -38,22 +41,28 @@ export default function Login() {
           }
         )
         const json = await response.json()
-        setAccessToken(json?.access_token)
         setLoading(false)
-        const redirectUri = searchParams?.get(
-          'redirectUri'
-        )
-        if (redirectUri) {
-          router.push(redirectUri)
+        if (json?.access_token) {
+          setAccessToken(json?.access_token)
+          const redirectUri = searchParams?.get(
+            'redirectUri'
+          )
+          if (redirectUri) {
+            router.push(redirectUri)
+          } else {
+            router.push('/')
+          }
         } else {
-          router.push('/')
+          setErrorMessage('Login failed')
+          setLoading(false)
         }
       } catch (error) {
         console.error(error)
         setLoading(false)
+        setErrorMessage('Login failed')
       }
     },
-    []
+    [router, searchParams, setAccessToken]
   )
 
   if (loading) {
@@ -102,6 +111,15 @@ export default function Login() {
       >
         Login
       </button>
+      {errorMessage && (
+        <p
+          style={{
+            color: '#f1095a',
+          }}
+        >
+          {errorMessage}
+        </p>
+      )}
     </form>
   )
 }
