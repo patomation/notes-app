@@ -13,6 +13,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@patomation/hotkey": "^1.9.0",
+    "@xstate/react": "^4.1.0",
     "jotai": "^2.7.1",
     "jotai-xstate": "^0.3.0",
     "lint-staged": "^15.2.2",

@@ -1,16 +1,5 @@
 #!/bin/bash
 
-nodenv install 18.19.0
-
-cd ui
-npm i
-cd ../
-
-cd api
-npm i
-cd ../
-
-
 if [ ! -f .env ]; then
   cp .env.example .env
 fi

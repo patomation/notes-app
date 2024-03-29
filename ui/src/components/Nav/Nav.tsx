@@ -1,25 +1,13 @@
 import Link from 'next/link'
 import React from 'react'
-import {
-  BeakerIcon,
-  HomeIcon,
-  // SearchIcon,
-  // AddIcon, 
-  MagnifyingGlassIcon,
-  PlusCircleIcon
-} from '@heroicons/react/24/solid'
 import { useAtom } from 'jotai'
 import { accessTokenAtom } from '@/atoms/accessTokenAtom'
-import { access } from 'fs'
 
 export function Nav() {
   const [accessToken, setAccessToken] = useAtom(
     accessTokenAtom
   )
 
-  const links: {title: string ,to: string }[] = [
-  
-  ]
   return (
     <nav
       id="nav"
@@ -33,50 +21,36 @@ export function Nav() {
         justifyContent: 'center',
       }}
     >
-      <section
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          maxWidth: '600px',
-          padding: '0.25em 1em 0 1em',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            padding: '0.5em 0',
-          }}
-        >
-          <HomeIcon className="h-6 w-6 text-white-500" />
-        </Link>
-
-        <MagnifyingGlassIcon  className="h-6 w-6 text-white-500"/>
-        <PlusCircleIcon  className="h-6 w-6 text-white-500"/>
-
-        {links.map(({ title, to }, i) => (
-          <Link
-            key={i}
-            href={to}
-            style={{
-              padding: '0.5em 0.5em',
-              border: '1px dotted gray',
-            }}
-          >
-            <h6>{title}</h6>
-          </Link>
-        ))}
-
+      <section>
         {!accessToken && (
-          <Link href="/login" style={{}}>
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          <div id="anon-view">
+            <Link href="/register">
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Register
+              </button>
+            </Link>
+            <Link href="/login">
+              <button
+                type="button"
+                className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+              >
+                Login
+              </button>
+            </Link>
+          </div>
+        )}
+        {accessToken && (
+          <div id="registered-view">
+            <Link
+              href="/login"
+              onClick={() => setAccessToken(null)}
             >
-              Login
-            </button>
-          </Link>
+              Log Out
+            </Link>
+          </div>
         )}
       </section>
     </nav>

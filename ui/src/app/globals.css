@@ -12,7 +12,9 @@ html {
   width: 100%;
 }
 
-html, body, #__next {
+html,
+body,
+#__next {
   height: 100%;
 }
 

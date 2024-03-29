@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# nodenv install 18.19.0
+
+cd ui
+npm i
+cd ../
+
+cd api
+npm i
+cd ../

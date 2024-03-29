@@ -1,12 +1,17 @@
 import { useForm } from 'react-hook-form'
-
+import {
+  MagnifyingGlassIcon,
+  PlusCircleIcon,
+} from '@heroicons/react/24/solid'
 
 interface SearchFormProps {
   onSubmit: (values: { query: string }) => void
+  onCancel: () => void
 }
 
 export function SearchForm({
   onSubmit,
+  onCancel,
 }: SearchFormProps) {
   const {
     register,
@@ -18,14 +23,13 @@ export function SearchForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-6">
-        <div>
-          <label
-            htmlFor="query"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Search Notes
-          </label>
+      <div>
+        <div
+          style={{
+            display: 'flex',
+            position: 'relative',
+          }}
+        >
           <input
             type="text"
             id="query"
@@ -33,14 +37,24 @@ export function SearchForm({
             placeholder=""
             {...register('query')}
           />
+          <button
+            type="submit"
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: '0.5em',
+            }}
+          >
+            <MagnifyingGlassIcon
+              className="h-6 w-6 text-white-500"
+              style={{
+                cursor: 'pointer',
+                marginRight: '1em',
+              }}
+            />
+          </button>
         </div>
       </div>
-      <button
-        type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        Search
-      </button>
     </form>
   )
 }
