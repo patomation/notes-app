@@ -1,0 +1,9 @@
+#!/bin/bash
+dockerSave () {
+  IMAGE=$1
+  rm $IMAGE.tar
+  sudo docker save $(sudo docker images -q $IMAGE) > $IMAGE.tar
+}
+dockerSave note-ui
+dockerSave note-api
+dockerSave note-nginx
