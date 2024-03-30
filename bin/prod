@@ -1,0 +1,5 @@
+#!/bin/bash
+bin/setup
+sudo docker compose \
+  -f docker-compose.prod.yml \
+  $@
