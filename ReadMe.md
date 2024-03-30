@@ -13,7 +13,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 Running the "regular" servers
 
 ```
-docker compose up
+bin/start
 ```
 
 Running the app with docker-hub images... what the prod server is using
