@@ -60,7 +60,7 @@ export class NoteService {
       .andWhere('note.deleted_at IS NULL')
       .getMany();
     return {
-      notes,
+      notes: notes.reverse(),
     };
   }
 }

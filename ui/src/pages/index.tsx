@@ -11,10 +11,14 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/solid'
-import { createMachine } from 'xstate'
+import { assign, createMachine } from 'xstate'
 
 const mainMachine = createMachine({
   initial: 'VIEW',
+  context: {
+    note_id: '',
+    content: '',
+  },
   states: {
     VIEW: {
       on: {
@@ -23,6 +27,17 @@ const mainMachine = createMachine({
         },
         NEW: {
           target: 'NEW',
+        },
+        EDIT: {
+          target: 'EDIT',
+          actions: [
+            assign({
+              note_id: ({ event }) =>
+                event.note_id,
+              content: ({ event }) =>
+                event.content,
+            }),
+          ],
         },
       },
     },
@@ -33,6 +48,17 @@ const mainMachine = createMachine({
         },
         CANCEL: {
           target: 'VIEW',
+        },
+        EDIT: {
+          target: 'EDIT',
+          actions: [
+            assign({
+              note_id: ({ event }) =>
+                event.note_id,
+              content: ({ event }) =>
+                event.content,
+            }),
+          ],
         },
       },
     },
@@ -46,6 +72,44 @@ const mainMachine = createMachine({
         },
         CANCEL: {
           target: 'VIEW',
+        },
+        EDIT: {
+          target: 'EDIT',
+          actions: [
+            assign({
+              note_id: ({ event }) =>
+                event.note_id,
+              content: ({ event }) =>
+                event.content,
+            }),
+          ],
+        },
+      },
+    },
+    EDIT: {
+      on: {
+        NEW: {
+          target: 'NEW',
+        },
+        SEARCH: {
+          target: 'SEARCH',
+        },
+        SAVE: {
+          target: 'VIEW',
+        },
+        CANCEL: {
+          target: 'VIEW',
+        },
+        EDIT: {
+          target: 'EDIT',
+          actions: [
+            assign({
+              note_id: ({ event }) =>
+                event.note_id,
+              content: ({ event }) =>
+                event.content,
+            }),
+          ],
         },
       },
     },
@@ -79,24 +143,62 @@ export default function Home() {
 
   const handleCreateNote = useCallback(
     async (content = '') => {
-      const response = await fetch(
-        '/api/note/create',
-        {
-          method: 'POST',
-          body: JSON.stringify({ content }),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization:
-              'Bearer ' + accessToken,
-          },
-        }
-      )
-      const json = await response.json()
       setNotes((prev) => [
         { note_id: 'new', content },
         ...prev,
       ])
       send({ type: 'SAVE' })
+      fetch('/api/note/create', {
+        method: 'POST',
+        body: JSON.stringify({ content }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
+        },
+      })
+    },
+    [accessToken, send]
+  )
+
+  const handleUpdateNote = useCallback(
+    async (
+      note_id: string,
+      content: string = ''
+    ) => {
+      setNotes((prev) =>
+        prev.map((n) => ({
+          ...n,
+          content:
+            n.note_id === note_id
+              ? content
+              : n.content,
+        }))
+      )
+      send({ type: 'SAVE' })
+      await fetch('/api/note/' + note_id, {
+        method: 'PATCH',
+        body: JSON.stringify({ content }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
+        },
+      })
+    },
+    [accessToken, send]
+  )
+
+  const handleDeleteNote = useCallback(
+    async (note_id: string) => {
+      setNotes((prev) =>
+        prev.filter((n) => n.note_id !== note_id)
+      )
+      fetch('/api/note/' + note_id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken,
+        },
+      })
     },
     [accessToken, send]
   )
@@ -106,6 +208,8 @@ export default function Home() {
       handleSearchNotes()
     }
   }, [accessToken, handleSearchNotes])
+
+  console.log({ current })
 
   return (
     accessToken && (
@@ -162,9 +266,24 @@ export default function Home() {
           />
         )}
         <ul>
-          {notes
-            ?.reverse()
-            .map(({ note_id, content }) => (
+          {notes.map(({ note_id, content }) =>
+            current.matches('EDIT') &&
+            current.context.note_id ===
+              note_id ? (
+              <NoteForm
+                key={note_id}
+                defaultValue={content}
+                onSubmit={(values) => {
+                  handleUpdateNote(
+                    note_id,
+                    values.content
+                  )
+                }}
+                onCancel={() => {
+                  send({ type: 'CANCEL' })
+                }}
+              />
+            ) : (
               <li
                 key={note_id}
                 style={{
@@ -173,47 +292,39 @@ export default function Home() {
                   borderRadius: '1em',
                   border: '1px solid gray',
                   background:
-                    'rgba(255,255,255,0.5)',
-                  wordWrap: 'break-word',
+                    'rgba(255,255,255,0.25)',
                 }}
               >
+                {/* <NoteForm onSubmit={() => {}} onCancel={() => {send({type: "CANCEL"})}}/> */}
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    // paddingBottom: '1em',
-                    border: '1px solid purple',
+                    alignItems: 'flex-start',
                   }}
                 >
                   <div
                     style={{
-                      border: '1px solid red',
-                      marginRight: '1em',
-                      maxWidth: '85%',
+                      flexGrow: 1,
+                      minWidth: '0', // fixes wordWrap
                     }}
                   >
-                    {/* title */}
-                    <span
+                    <div
                       style={{
                         wordWrap: 'break-word',
+                        display: 'block',
+                        paddingRight: '1em',
                       }}
                     >
                       {content}
-                    </span>
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      flexGrow: 1,
-                      border: '1px solid green',
-                    }}
-                  ></div>
+
                   <div
                     style={{
                       display: 'flex',
-                      flexDirection: 'column',
                       justifyContent:
                         'space-between',
-                      border: '1px solid gold',
                       height: '100%',
                     }}
                   >
@@ -221,10 +332,14 @@ export default function Home() {
                       className="h-6 w-6 text-white-500"
                       style={{
                         cursor: 'pointer',
-                        marginRight: '0.5em',
+                        marginRight: '1em',
                       }}
                       onClick={() =>
-                        send({ type: 'EDIT' })
+                        send({
+                          type: 'EDIT',
+                          note_id,
+                          content,
+                        })
                       }
                     />
                     <TrashIcon
@@ -232,18 +347,15 @@ export default function Home() {
                       style={{
                         cursor: 'pointer',
                       }}
+                      onClick={() =>
+                        handleDeleteNote(note_id)
+                      }
                     />
                   </div>
                 </div>
-                {/* <span
-                  style={{
-                    wordWrap: 'break-word',
-                  }}
-                >
-                  {content}
-                </span> */}
               </li>
-            ))}
+            )
+          )}
         </ul>
       </>
     )

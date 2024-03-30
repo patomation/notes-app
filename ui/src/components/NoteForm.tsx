@@ -3,11 +3,13 @@ import { useForm } from 'react-hook-form'
 interface NoteFormProps {
   onSubmit: (values: { content: string }) => void
   onCancel: () => void
+  defaultValue?: string
 }
 
 export function NoteForm({
   onSubmit,
   onCancel,
+  defaultValue = '',
 }: NoteFormProps) {
   const {
     register,
@@ -18,9 +20,7 @@ export function NoteForm({
   >()
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div
         className="mb-6"
         style={{
@@ -31,15 +31,9 @@ export function NoteForm({
         }}
       >
         <div>
-          <label
-            htmlFor="query"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            New Note
-          </label>
-          <input
+          <textarea
             autoFocus
-            type="text"
+            defaultValue={defaultValue}
             id="content"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder=""
