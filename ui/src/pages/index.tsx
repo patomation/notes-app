@@ -12,6 +12,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/solid'
 import { assign, createMachine } from 'xstate'
+import { useDebounce } from '@/hooks/useDebounce'
 
 const mainMachine = createMachine({
   initial: 'VIEW',
@@ -122,6 +123,7 @@ export default function Home() {
 
   const [notes, setNotes] = useState<Note[]>([])
 
+  const [searchDebounce] = useDebounce()
   const handleSearchNotes = useCallback(
     async (query = '') => {
       const response = await fetch(
@@ -138,7 +140,7 @@ export default function Home() {
       const json = await response.json()
       setNotes(json.notes)
     },
-    [accessToken]
+    [accessToken, searchDebounce]
   )
 
   const handleCreateNote = useCallback(
@@ -241,6 +243,11 @@ export default function Home() {
                 onCancel={() =>
                   send({ type: 'CANCEL' })
                 }
+                onChange={(value) => {
+                  searchDebounce(() => {
+                    handleSearchNotes(value)
+                  }, 1000)
+                }}
               />
             ) : (
               <MagnifyingGlassIcon
