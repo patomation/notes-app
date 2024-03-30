@@ -144,18 +144,29 @@ export default function Home() {
   const handleCreateNote = useCallback(
     async (content = '') => {
       setNotes((prev) => [
-        { note_id: 'new', content },
+        { note_id: 'OPTIMISTIC', content },
         ...prev,
       ])
       send({ type: 'SAVE' })
-      fetch('/api/note/create', {
-        method: 'POST',
-        body: JSON.stringify({ content }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + accessToken,
-        },
-      })
+      const response = await fetch(
+        '/api/note/create',
+        {
+          method: 'POST',
+          body: JSON.stringify({ content }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization:
+              'Bearer ' + accessToken,
+          },
+        }
+      )
+      const note = await response.json()
+      setNotes((prev) => [
+        note,
+        ...prev.filter(
+          (n) => n.note_id !== 'OPTIMISTIC'
+        ),
+      ])
     },
     [accessToken, send]
   )
@@ -320,38 +331,42 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent:
-                        'space-between',
-                      height: '100%',
-                    }}
-                  >
-                    <PencilIcon
-                      className="h-6 w-6 text-white-500"
+                  {note_id !== 'OPTIMISTIC' && (
+                    <div
                       style={{
-                        cursor: 'pointer',
-                        marginRight: '1em',
+                        display: 'flex',
+                        justifyContent:
+                          'space-between',
+                        height: '100%',
                       }}
-                      onClick={() =>
-                        send({
-                          type: 'EDIT',
-                          note_id,
-                          content,
-                        })
-                      }
-                    />
-                    <TrashIcon
-                      className="h-6 w-6 text-white-500"
-                      style={{
-                        cursor: 'pointer',
-                      }}
-                      onClick={() =>
-                        handleDeleteNote(note_id)
-                      }
-                    />
-                  </div>
+                    >
+                      <PencilIcon
+                        className="h-6 w-6 text-white-500"
+                        style={{
+                          cursor: 'pointer',
+                          marginRight: '1em',
+                        }}
+                        onClick={() =>
+                          send({
+                            type: 'EDIT',
+                            note_id,
+                            content,
+                          })
+                        }
+                      />
+                      <TrashIcon
+                        className="h-6 w-6 text-white-500"
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() =>
+                          handleDeleteNote(
+                            note_id
+                          )
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               </li>
             )
