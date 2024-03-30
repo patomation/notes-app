@@ -41,7 +41,7 @@ export default function Login() {
           }
         )
         const json = await response.json()
-        if (accessToken) {
+        if (json?.access_token) {
           setAccessToken(json?.access_token)
           setLoading(false)
           const redirectUri = searchParams?.get(

@@ -3,12 +3,10 @@
 Run the dev servers
 
 ```
+bin/install
 bin/dev up
 ```
-or
-```
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up
-```
+then go to localhost:8080
 
 Running the "regular" servers
 

@@ -2,20 +2,16 @@ version: "3.9"
 services:
   nginx:
     ports:
-      - 9004:80
+      - 8080:80
       - 443:443
     volumes:
       - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
   ui:
-    ports:
-      - 9003:80
     volumes:
       - ./ui/src:/app/src
       - ./ui/node_modules:/app/node_modules
     command: npm run dev
   api:
-    ports:
-      - 9002:80
     volumes:
       - ./api/src:/app/src
       - ./data:/app/data
