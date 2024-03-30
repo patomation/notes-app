@@ -42,3 +42,7 @@ the ui is just an NextJs app. It really didn't need to be SSR. But I started goi
 The api is written with the NestJS framework. I like it because it is modular. I already had the auth module from some other project I was working on. Just had to make the notes module with the routes. 
 The pitfall of NodeJS servers is that they make 1+GB images. Taking up space on the small linode server. I solved this by offloading images to docker hub. Then pulling the images after ssh-ing into the linde. See docker-compose.prod.yml
 I went with REST for the api interface. But could have easily implemented graphql with nestJS. I like being able to make POST PATCH and DELETE http requests.
+
+# database
+The database is just SQL-Lite with TypeORM on top. No need for a container. It saves the database as a db file. Nothing is backed up.
+user passwords are hashed and stored along with the salt in the database for security. Each user creates notes with there user_id as a foreign key. All user notes are on the same table. There could be more separation. But this is a simple project   
