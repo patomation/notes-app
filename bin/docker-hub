@@ -1,7 +1,7 @@
-docker tag note-api:latest patomation/note-api:latest
-docker tag note-ui:latest patomation/note-ui:latest
-docker tag note-nginx:latest patomation/note-nginx:latest
+sudo docker tag note-api:latest patomation/note-api:latest
+sudo docker tag note-ui:latest patomation/note-ui:latest
+sudo docker tag note-nginx:latest patomation/note-nginx:latest
 
-docker push patomation/note-api:latest
-docker push patomation/note-ui:latest
-docker push patomation/note-nginx:latest
+sudo docker push patomation/note-api:latest
+sudo docker push patomation/note-ui:latest
+sudo docker push patomation/note-nginx:latest

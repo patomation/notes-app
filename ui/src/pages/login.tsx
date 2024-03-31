@@ -6,6 +6,7 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation'
+import Link from 'next/link'
 
 export default function Login() {
   const {
@@ -53,7 +54,7 @@ export default function Login() {
             router.push('/')
           }
         } else {
-          setErrorMessage('Login failed')
+          setErrorMessage(json?.message || 'Login failed')
           setLoading(false)
         }
       } catch (error) {
@@ -107,10 +108,18 @@ export default function Login() {
       </div>
       <button
         type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-1/2 w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Login
       </button>
+      <Link href="/register">
+        <button
+          type="button"
+          className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm sm:w-1/2 w-full  px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+        >
+          New user? Register instead
+        </button>
+      </Link>
       {errorMessage && (
         <p
           style={{

@@ -51,7 +51,11 @@ export class AuthService {
       };
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('', error);
+      throw new BadRequestException(
+        String(error).includes('SQLITE_CONSTRAINT: UNIQUE')
+          ? 'username already exists'
+          : String(error),
+      );
     }
   }
 
@@ -69,21 +73,21 @@ export class AuthService {
       .getOne();
 
     if (!auth) {
-      const message = "User not found"
-      console.log(message)
-      throw new UnauthorizedException(message)
-    };
+      const message = 'User not found';
+      console.log(message);
+      throw new UnauthorizedException(message);
+    }
     const hashPassword = await hash(password, auth.salt);
     if (auth.username !== username) {
-      const message = "username miss match"
-      console.log(message)
-      throw new UnauthorizedException(message)
-    };
+      const message = 'username miss match';
+      console.log(message);
+      throw new UnauthorizedException(message);
+    }
     if (auth.password !== hashPassword) {
-      const message = "password miss match"
-      console.log(message)
-      throw new UnauthorizedException(message)
-    };
+      const message = 'password miss match';
+      console.log(message);
+      throw new UnauthorizedException(message);
+    }
 
     return {
       username: auth.username,
