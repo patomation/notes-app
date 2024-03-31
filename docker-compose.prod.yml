@@ -26,6 +26,8 @@ services:
     networks:
       - note_network
     command: npm start
+    volumes:
+      - ./data:/app/data
 
 networks:
   note_network:
